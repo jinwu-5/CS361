@@ -11,10 +11,10 @@ function analyticsGraph() {
             labels: ["plant_1", "plant_2", "plant_3", "plant_4"],
             datasets: [
               {
-                label: "plant population and # of bear attacks for Oregon",
+                label: "plant populations and # of bear attacks for Oregon",
                 data: mockPlantData,
-                backgroundColor: ["aqua", "green", "red", "yellow"],
-                borderColor: ["aqua", "green", "red", "yellow"],
+                backgroundColor: ["purple", "green", "orange", "yellow"],
+                borderColor: ["purple", "green", "orange", "yellow"],
                 borderWidth: 0.5,
               },
             ],
