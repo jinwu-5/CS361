@@ -1,8 +1,3 @@
-// MyStuff.js
-/* global localStorage */
-
-// Use localStorage below with no linter errors
-
 const PORT = process.env.PORT || 3000;
 
 const express = require("express");
@@ -19,7 +14,6 @@ app.use(express.static("public"));
 
 let { PythonShell } = require("python-shell");
 const fs = require("fs");
-const csv = require("csv-parser");
 
 app.get("/analytics", (req, res) => {
   const request = ["State", req.query.states];
