@@ -23,7 +23,7 @@
           <option value="Alaska">Alaska</option>
           <option value="Arizona">Arizona</option>
           <option value="Arkansas">Arkansas</option>
-          <option value=California">California</option>
+          <option value="California">California</option>
           <option value="Colorado">Colorado</option>
           <option value="Connecticut">Connecticut</option>
           <option value="Delaware">Delaware</option>
@@ -75,12 +75,14 @@
       <button name="submit" type="submit" id="state-submit" class="button">
         See the analytics
       </button>
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">
-        $('.button').click(function(){
-   $.get('http://localhost:3000/analytics?states=AK&submit=', {}, function(data){
-        console.log(data)
-   });
-});
+      <script
+        src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"
+      >
+                $('.button').click(function(){
+           $.get('http://localhost:3000/analytics?states=AK&submit=', {}, function(data){
+                console.log(data)
+           });
+        });
       </script>
     </form>
   </body>

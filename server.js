@@ -44,27 +44,34 @@ app.get("/analytics", (req, res) => {
     return new Promise((r) => setTimeout(r, ms));
   }
 
-  async function runPythonScript() {
+  async function runAttackServicePythonScript() {
     await wait(50);
     PythonShell.run("attack_service.py", null, function (err, result) {});
     console.log("3rd call", "python ran");
   }
 
-  var inputState = [];
-  async function readResponse() {
-    await wait(100);
+  async function readAttackServiceResponse() {
+    await wait(400);
     fs.readFile("attack_response.csv", "utf8", (err, data) => {
       if (err) return console.error("Error while opening file");
-      inputState = String(data).split(", ");
+      attackResponse = String(data).split(", ");
       console.log("4th call", "send data");
-      res.send(inputState);
+      res.send(
+        "Hi there, here is " +
+          attackResponse[0] +
+          ", the chance of bear attack is " +
+          attackResponse[1] +
+          "%, which is " +
+          attackResponse[2] +
+          "."
+      );
     });
   }
 
-  async function runPipeline() {
-    await writeToCSVFile(request);
-    await runPythonScript();
-    readResponse();
+  function runPipeline() {
+    writeToCSVFile(request);
+    runAttackServicePythonScript();
+    readAttackServiceResponse();
   }
   runPipeline();
 });
