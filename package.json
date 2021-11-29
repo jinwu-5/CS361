@@ -1,0 +1,18 @@
+{
+  "name": "forest_service",
+  "version": "1.0.0",
+  "description": "CS360_Project",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "author": "Jin Wu",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "express-handlebars": "^5.2.1",
+    "fs": "0.0.1-security",
+    "nodemon": "^2.0.15",
+    "python-shell": "^3.0.1"
+  }
+}

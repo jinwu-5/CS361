@@ -1,8 +1,25 @@
 const PORT = process.env.PORT || 3000;
 
-const express = require("express");
+const {
+  writeToCSVFile,
+  runServicePythonScript,
+  readServiceResponse,
+} = require("./utils.js");
 
+const express = require("express");
 const app = express();
+
+// Handlebars Setup
+var exphbs = require("express-handlebars");
+app.engine(
+  ".hbs",
+  exphbs({
+    extname: ".hbs",
+  })
+);
+app.set("view engine", ".hbs");
+
+app.use(express.static("public"));
 
 app.use(
   express.urlencoded({
@@ -10,64 +27,62 @@ app.use(
   })
 );
 
-app.use(express.static("public"));
+app.use(express.json());
 
-let { PythonShell } = require("python-shell");
-const fs = require("fs");
+/**
+ * Routes
+ */
 
+// Homepage
+app.get("/", (req, res) => {
+  res.render("home");
+});
+
+app.get("/home", (req, res) => {
+  res.render("home");
+});
+
+// Analytics
 app.get("/analytics", (req, res) => {
   const request = ["State", req.query.states];
-  const filename = "attack_request.csv";
-  console.log(request);
-  async function writeToCSVFile(request) {
-    fs.writeFile(filename, extractAsCSV(request), (err) => {
-      if (err) {
-        console.log("Error writing to csv file", err);
-      } else {
-        console.log("2nd call", extractAsCSV(request));
-        console.log(`saved as ${filename}`);
-      }
-    });
-  }
 
-  function extractAsCSV(request) {
-    return request.join(", ");
-  }
+  let attackData, forestData, combineData;
 
-  function wait(ms) {
-    return new Promise((r) => setTimeout(r, ms));
-  }
+  writeToCSVFile(request, "attack_request.csv", "forest_request.csv")
+    .then(() => {
+      runServicePythonScript("attack_service.py", "forest_service.py");
+    })
+    .then(() =>
+      readServiceResponse("attack_response.csv")
+        .then((data) => {
+          attackData = data;
+        })
+        .then(() => readServiceResponse("forest_response.csv"))
+        .then((data) => {
+          forestData = data;
+          combineData = attackData + ", " + forestData;
+          combineData = String(combineData).split(", ");
 
-  async function runAttackServicePythonScript() {
-    await wait(50);
-    PythonShell.run("attack_service.py", null, function (err, result) {});
-    console.log("3rd call", "python ran");
-  }
+          // remove brackets from the string
 
-  async function readAttackServiceResponse() {
-    await wait(400);
-    fs.readFile("attack_response.csv", "utf8", (err, data) => {
-      if (err) return console.error("Error while opening file");
-      attackResponse = String(data).split(", ");
-      console.log("4th call", "send data");
-      res.send(
-        "Hi there, here is " +
-          attackResponse[0] +
-          ", the chance of bear attack is " +
-          attackResponse[1] +
-          "%, which is " +
-          attackResponse[2] +
-          "."
-      );
-    });
-  }
+          for (i = 1; i < combineData.length; i++) {
+            combineData[i] = combineData[i].replace(/[\[\]']+/g, "");
+          }
 
-  function runPipeline() {
-    writeToCSVFile(request);
-    runAttackServicePythonScript();
-    readAttackServiceResponse();
-  }
-  runPipeline();
+          let dataObject = {
+            state: combineData[0],
+            attackRisk: combineData[1],
+            chanceOfAttack: combineData[2],
+            forestCoverage: combineData[4],
+            redMaple: combineData[5],
+            loblollyPine: combineData[6],
+            mapleSugar: combineData[7],
+            floweringDogwood: combineData[8],
+          };
+
+          res.render("analytics", { data: dataObject });
+        })
+    );
 });
 
 app.listen(PORT, () => {
