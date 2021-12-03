@@ -29,11 +29,6 @@ app.use(
 
 app.use(express.json());
 
-/**
- * Routes
- */
-
-// Homepage
 app.get("/", (req, res) => {
   res.render("home");
 });
@@ -42,7 +37,6 @@ app.get("/home", (req, res) => {
   res.render("home");
 });
 
-// Analytics
 app.get("/analytics", (req, res) => {
   const request = ["State", req.query.states];
 
