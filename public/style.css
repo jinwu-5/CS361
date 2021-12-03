@@ -31,11 +31,18 @@ fieldset {
 
 h1 {
   font-size: 48px;
-  color: #656565;
-  /* text-transform: uppercase; */
+  color: #fff;
   font-weight: 300;
   text-align: center;
   margin-bottom: 30px;
+}
+
+h2 {
+  font-size: 48px;
+  color: #656565;
+  font-weight: 300;
+  text-align: center;
+  margin-bottom: 50px;
 }
 
 h4 {
