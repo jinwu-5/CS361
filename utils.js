@@ -40,7 +40,7 @@ async function runServicePythonScript(attack_service, forest_service) {
 
 const readServiceResponse = async (service_response) => {
   // read the service response csv file and return its content
-  await wait(800);
+  await wait(900);
   const fileContent = await new Promise((resolve, reject) => {
     return fs.readFile(service_response, "utf8", (err, data) => {
       if (err) {
